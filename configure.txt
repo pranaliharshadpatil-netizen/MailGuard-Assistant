@@ -1,0 +1,5 @@
+creds = get_user_credentials()
+if "error" not in creds:
+    print(f"Logging in as {creds['email']}")
+else:
+    print(creds["error"])

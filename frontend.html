@@ -1,0 +1,441 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mail Guard | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-1: #041018;
+      --bg-2: #0b1f2d;
+      --panel: #0f2635cc;
+      --panel-border: #79c5f833;
+      --primary: #7cd8ff;
+      --primary-strong: #2fc0ff;
+      --accent: #ffc072;
+      --danger: #ff8976;
+      --text-main: #e6f2ff;
+      --text-soft: #a6bfd3;
+      --field-bg: #07141fcc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at 18% 15%, #1f7db433 0, transparent 35%),
+        radial-gradient(circle at 83% 82%, #ffc07222 0, transparent 28%),
+        linear-gradient(145deg, var(--bg-1), var(--bg-2));
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      filter: blur(48px);
+      pointer-events: none;
+      opacity: 0.28;
+      animation: drift 10s ease-in-out infinite alternate;
+    }
+
+    .orb.left {
+      left: -100px;
+      top: -80px;
+      background: #2fc0ff;
+    }
+
+    .orb.right {
+      right: -120px;
+      bottom: -120px;
+      background: #ffc072;
+      animation-delay: 2s;
+    }
+
+    @keyframes drift {
+      from { transform: translateY(0) translateX(0) scale(1); }
+      to { transform: translateY(20px) translateX(10px) scale(1.05); }
+    }
+
+    .layout {
+      width: min(980px, 100%);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+      animation: rise 0.7s ease-out both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .intro,
+    .card {
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(160deg, #102739d6, #0b1d2acc);
+      box-shadow: 0 14px 38px #02090f88;
+    }
+
+    .intro {
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro::after {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: #2fc0ff22;
+      right: -65px;
+      top: -50px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid #7cd8ff55;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #cbebff;
+      background: #72c8f91a;
+    }
+
+    h1 {
+      margin: 16px 0 8px;
+      font-size: clamp(30px, 4.2vw, 42px);
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 0 0 22px;
+      color: var(--text-soft);
+      max-width: 35ch;
+    }
+
+    .point-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .point-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #cbe3f8;
+      font-size: 15px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      box-shadow: 0 0 10px #7cd8ff88;
+      flex: 0 0 auto;
+    }
+
+    .card {
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .card p {
+      margin: 0 0 8px;
+      color: var(--text-soft);
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #b6cee3;
+      margin: 12px 0 6px;
+    }
+
+    .field,
+    .field-wrap {
+      width: 100%;
+      border: 1px solid #7ca9c633;
+      background: var(--field-bg);
+      border-radius: 12px;
+    }
+
+    .field {
+      padding: 12px 13px;
+      color: var(--text-main);
+      font-size: 15px;
+      font-family: "Space Grotesk", sans-serif;
+      outline: none;
+    }
+
+    .field:focus,
+    .field-wrap:focus-within {
+      border-color: #8ad8ff99;
+      box-shadow: 0 0 0 3px #8ad8ff22;
+    }
+
+    .field-wrap {
+      display: flex;
+      align-items: center;
+      padding: 0 6px 0 0;
+    }
+
+    .field-wrap .field {
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      padding-right: 8px;
+    }
+
+    .toggle {
+      border: 0;
+      background: transparent;
+      color: #cde6fb;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    .toggle:hover {
+      background: #9fdfff1f;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #c2d9ed;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .check input {
+      accent-color: var(--primary-strong);
+    }
+
+    .forgot {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .submit {
+      margin-top: 14px;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #052033;
+      background: linear-gradient(120deg, var(--primary), #9fe4ff);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px #7cd8ff44;
+    }
+
+    .submit:disabled {
+      cursor: wait;
+      opacity: 0.8;
+    }
+
+    .meta {
+      margin-top: 12px;
+      font-size: 12px;
+      font-family: "IBM Plex Mono", monospace;
+      color: #92adc2;
+    }
+
+    .message {
+      min-height: 18px;
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--danger);
+    }
+
+    .message.success {
+      color: #97ffc3;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .intro {
+        padding: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb left"></div>
+  <div class="orb right"></div>
+
+  <main class="layout">
+    <section class="intro">
+      <span class="tag">Mail Guard Security</span>
+      <h1>Secure your inbox before threats reach your team.</h1>
+      <p class="subtitle">Sign in to review suspicious messages, analyze senders, and stop phishing attempts in real time.</p>
+      <ul class="point-list">
+        <li><span class="dot"></span>Real-time phishing alerts and risk scoring</li>
+        <li><span class="dot"></span>Safe-link scanning and attachment checks</li>
+        <li><span class="dot"></span>Single dashboard for quarantine and approvals</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Login</h2>
+      <p>Use your Mail Guard credentials to continue.</p>
+      <form id="loginForm" novalidate>
+        <label for="email">Email</label>
+        <input id="email" class="field" type="email" placeholder="you@company.com" autocomplete="email" required />
+
+        <label for="password">Password</label>
+        <div class="field-wrap">
+          <input id="password" class="field" type="password" placeholder="Enter password" autocomplete="current-password" required />
+          <button id="togglePassword" class="toggle" type="button" aria-label="Toggle password visibility">Show</button>
+        </div>
+
+        <div class="row">
+          <label class="check" for="rememberMe">
+            <input id="rememberMe" type="checkbox" />
+            Keep me signed in
+          </label>
+          <a class="forgot" href="#">Forgot password?</a>
+        </div>
+
+        <button id="submitBtn" class="submit" type="submit">Sign In</button>
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+        <div class="meta">Default backend login: admin@mailguard.local / MailGuard@123</div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const submitBtn = document.getElementById("submitBtn");
+    const message = document.getElementById("message");
+    const rememberMe = document.getElementById("rememberMe");
+    const togglePassword = document.getElementById("togglePassword");
+    const apiBase = "http://127.0.0.1:5000";
+    const DASHBOARD_URL = "loginportal.html";
+
+    if (localStorage.getItem("mailGuardSession")) {
+      window.location.href = DASHBOARD_URL;
+    }
+
+    togglePassword.addEventListener("click", () => {
+      const isHidden = passwordInput.type === "password";
+      passwordInput.type = isHidden ? "text" : "password";
+      togglePassword.textContent = isHidden ? "Hide" : "Show";
+    });
+
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      message.textContent = "";
+      message.classList.remove("success");
+
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        message.textContent = "Email and password are required.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Signing In...";
+
+      fetch(`${apiBase}/api/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      })
+        .then(async (response) => {
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(data.error || "Login failed");
+          }
+          return data;
+        })
+        .then((data) => {
+          const payload = {
+            email: data.email || email,
+            token: data.token || "",
+            expiresAt: data.expiresAt || "",
+            signedInAt: new Date().toISOString(),
+            remember: rememberMe.checked
+          };
+          localStorage.setItem("mailGuardSession", JSON.stringify(payload));
+
+          message.classList.add("success");
+          message.textContent = "Login successful. Opening dashboard...";
+          setTimeout(() => {
+            window.location.href = DASHBOARD_URL;
+          }, 500);
+        })
+        .catch((error) => {
+          message.textContent = error.message || "Unable to sign in. Check backend API.";
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Sign In";
+        });
+    });
+  </script>
+</body>
+</html>
+

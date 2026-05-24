@@ -1,0 +1,1420 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mail Guard | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-a: #031219;
+      --bg-b: #0b2332;
+      --surface: #0f2b3dcc;
+      --surface-2: #102130cc;
+      --line: #8bc6e63a;
+      --text: #dff5ff;
+      --muted: #9dbad0;
+      --primary: #6fd4ff;
+      --danger: #ff7d74;
+      --warning: #ffbf66;
+      --safe: #7cf0a5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Outfit", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 16%, #3db4ea2b 0, transparent 30%),
+        radial-gradient(circle at 88% 88%, #ffbf6622 0, transparent 28%),
+        linear-gradient(140deg, var(--bg-a), var(--bg-b));
+      padding: 20px;
+    }
+
+    .shell {
+      width: min(1260px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+      animation: in 0.55s ease-out;
+    }
+
+    @keyframes in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bar,
+    .card,
+    .list,
+    .detail,
+    .analytics-card {
+      border: 1px solid var(--line);
+      background: linear-gradient(160deg, var(--surface), var(--surface-2));
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 32px #0210187c;
+    }
+
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #072033;
+      background: linear-gradient(120deg, #9de6ff, #6fd4ff);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid #a1d3f649;
+      background: #82cbf316;
+      color: #d5eeff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      color: #052036;
+      background: linear-gradient(120deg, #78d9ff, #a8e9ff);
+    }
+
+    .btn.secondary {
+      color: var(--text);
+      background: #78d9ff1d;
+      border: 1px solid #8fd9ff40;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      padding: 16px;
+    }
+
+    .card .label {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .card .value {
+      margin: 6px 0 0;
+      font-size: clamp(26px, 3vw, 34px);
+      font-weight: 700;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 14px;
+      min-height: 560px;
+    }
+
+    .list,
+    .detail {
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .list-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .search {
+      width: 100%;
+      border: 1px solid #88bad838;
+      background: #071a27cf;
+      border-radius: 11px;
+      color: var(--text);
+      padding: 10px 12px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: #9fe0ff87;
+      box-shadow: 0 0 0 3px #9fe0ff26;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      border: 1px solid #84bee042;
+      background: #89d5ff17;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: linear-gradient(120deg, #78d9ff3d, #ffbf662b);
+      border-color: #9ed8fc75;
+    }
+
+    .mail-list {
+      height: 455px;
+      overflow: auto;
+      display: grid;
+      gap: 8px;
+      padding-right: 4px;
+    }
+
+    .mail-item {
+      border: 1px solid #89c1de2a;
+      background: #82d5ff12;
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      display: grid;
+      gap: 5px;
+    }
+
+    .mail-item.active {
+      border-color: #a8e5ff7a;
+      background: #8edbff2d;
+    }
+
+    .mail-item .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mail-item h4 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .mail-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .risk {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .risk.high { color: #ffd4cf; background: #ff7d7420; border-color: #ff9d9559; }
+    .risk.medium { color: #ffe8c6; background: #ffbf661c; border-color: #ffcf8a5e; }
+    .risk.low { color: #d4ffe5; background: #7cf0a522; border-color: #9af2b66e; }
+
+    .detail {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 10px;
+    }
+
+    .detail h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      max-width: 30ch;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+    }
+
+    .body {
+      border: 1px solid #87bedd2f;
+      background: #82d5ff12;
+      border-radius: 13px;
+      padding: 12px;
+      color: #d3edff;
+      line-height: 1.55;
+      overflow: auto;
+      max-height: 220px;
+      white-space: pre-wrap;
+    }
+
+    .reason-box {
+      border: 1px solid #87bedd2f;
+      background: #7ed6ff0e;
+      border-radius: 13px;
+      padding: 12px;
+    }
+
+    .reason-box h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .reasons {
+      margin: 0;
+      padding-left: 18px;
+      color: #cae5f9;
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .notice {
+      font-size: 12px;
+      font-family: "JetBrains Mono", monospace;
+      color: var(--muted);
+    }
+
+    .analytics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .analytics-card {
+      padding: 14px;
+    }
+
+    .analytics-card h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .dist-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 40px;
+      gap: 8px;
+      align-items: center;
+      margin: 8px 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      background: #102a3b;
+      border-radius: 999px;
+      height: 11px;
+      overflow: hidden;
+      border: 1px solid #87c5e933;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    .bar-fill.high { background: linear-gradient(120deg, #ff7d74, #ffb2aa); }
+    .bar-fill.medium { background: linear-gradient(120deg, #ffbf66, #ffdca1); }
+    .bar-fill.low { background: linear-gradient(120deg, #7cf0a5, #b0ffc9); }
+
+    .mini-list {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 7px;
+      max-height: 210px;
+      overflow: auto;
+    }
+
+    .mini-list li {
+      border: 1px solid #8ed1ec2f;
+      border-radius: 10px;
+      background: #81d5ff10;
+      padding: 8px;
+      font-size: 12px;
+      color: #cfe9fb;
+    }
+
+    .mini-list li strong {
+      color: #e8f6ff;
+      font-weight: 600;
+    }
+
+    .small-muted {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .trend {
+      margin-top: 10px;
+      display: grid;
+      gap: 6px;
+      max-height: 140px;
+      overflow: auto;
+    }
+
+    .trend-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      border: 1px solid #8dcce635;
+      border-radius: 9px;
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #c9e3f4;
+    }
+
+    .high-risk-chart-wrap {
+      margin-top: 8px;
+      border: 1px solid #8ccbe53d;
+      border-radius: 12px;
+      background: #081d2a;
+      padding: 8px;
+      position: relative;
+    }
+
+    .high-risk-chart {
+      width: 100%;
+      height: 180px;
+      display: block;
+    }
+
+    .chart-grid {
+      stroke: #89c3de33;
+      stroke-width: 1;
+    }
+
+    .chart-line {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .chart-line.high {
+      stroke: #ff9f95;
+    }
+
+    .chart-line.medium {
+      stroke: #ffd088;
+    }
+
+    .chart-line.low {
+      stroke: #97f2b8;
+    }
+
+    .chart-point {
+      stroke-width: 2;
+    }
+
+    .chart-point.high {
+      fill: #ffd7d2;
+      stroke: #ff7d74;
+    }
+
+    .chart-point.medium {
+      fill: #ffe6bf;
+      stroke: #ffbf66;
+    }
+
+    .chart-point.low {
+      fill: #d9ffe7;
+      stroke: #7cf0a5;
+    }
+
+    .chart-legend {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      color: #d0e8f7;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .legend-dot.high {
+      background: #ff9f95;
+    }
+
+    .legend-dot.medium {
+      background: #ffd088;
+    }
+
+    .legend-dot.low {
+      background: #97f2b8;
+    }
+
+    .chart-label-row {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chart-pill {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: #d2e8f8;
+      background: #86d3ff14;
+      border: 1px solid #8ecde748;
+      border-radius: 999px;
+      padding: 4px 8px;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform: translate(-50%, -115%);
+      pointer-events: none;
+      z-index: 3;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      line-height: 1.35;
+      color: #e7f7ff;
+      background: #06141fa6;
+      border: 1px solid #8ecfe978;
+      border-radius: 8px;
+      padding: 6px 8px;
+      white-space: nowrap;
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transition: opacity 0.12s ease;
+    }
+
+    .chat-log {
+      margin-top: 10px;
+      border: 1px solid #8bc6e642;
+      background: #081c2acc;
+      border-radius: 12px;
+      padding: 10px;
+      height: 170px;
+      overflow: auto;
+      display: grid;
+      gap: 8px;
+    }
+
+    .chat-msg {
+      border-radius: 10px;
+      padding: 8px;
+      font-size: 12px;
+      line-height: 1.4;
+      border: 1px solid #8bc6e62e;
+    }
+
+    .chat-msg.user {
+      background: #76d7ff1f;
+      border-color: #9cdfff50;
+      color: #d8f3ff;
+      justify-self: end;
+      max-width: 92%;
+    }
+
+    .chat-msg.bot {
+      background: #9de8c41a;
+      border-color: #9be6bf55;
+      color: #ddfcea;
+      max-width: 94%;
+    }
+
+    .assistant-form {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .assistant-input {
+      border: 1px solid #88bad838;
+      background: #071a27cf;
+      border-radius: 10px;
+      color: var(--text);
+      padding: 10px 11px;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .assistant-input:focus {
+      border-color: #9fe0ff87;
+      box-shadow: 0 0 0 3px #9fe0ff26;
+    }
+
+    .chat-actions {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .quick {
+      border: 1px solid #8ed0ea4d;
+      border-radius: 999px;
+      background: #80d8ff1b;
+      color: #d7efff;
+      padding: 6px 10px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      border: 1px dashed #89b8d445;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    @media (max-width: 1080px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .main { grid-template-columns: 1fr; }
+      .mail-list { height: 290px; }
+      .analytics { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      body { padding: 14px; }
+      .stats { grid-template-columns: 1fr; }
+      .brand h1 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="bar">
+      <div class="brand">
+        <div class="logo">MG</div>
+        <div>
+          <h1>Mail Guard Dashboard</h1>
+          <p id="userInfo">Signed in</p>
+        </div>
+      </div>
+      <div class="controls">
+        <span id="sourceChip" class="chip">Secured API</span>
+        <button id="refreshBtn" class="btn secondary" type="button">Refresh</button>
+        <button id="exportBtn" class="btn secondary" type="button">Export Report</button>
+        <button id="logoutBtn" class="btn" type="button">Logout</button>
+      </div>
+    </header>
+
+    <section class="stats">
+      <article class="card">
+        <p class="label">Total Emails</p>
+        <p id="totalCount" class="value">0</p>
+      </article>
+      <article class="card">
+        <p class="label">High Risk</p>
+        <p id="highCount" class="value">0</p>
+      </article>
+      <article class="card">
+        <p class="label">Suspicious Domains</p>
+        <p id="domainCount" class="value">0</p>
+      </article>
+      <article class="card">
+        <p class="label">Average Risk Score</p>
+        <p id="avgScore" class="value">0</p>
+      </article>
+    </section>
+
+    <section class="main">
+      <aside class="list">
+        <div class="list-head">
+          <input id="searchInput" class="search" type="search" placeholder="Search subject or sender" />
+          <div class="tabs">
+            <button class="tab active" data-filter="all" type="button">All</button>
+            <button class="tab" data-filter="high" type="button">High Risk</button>
+            <button class="tab" data-filter="medium" type="button">Medium</button>
+            <button class="tab" data-filter="low" type="button">Low</button>
+          </div>
+        </div>
+        <div id="mailList" class="mail-list"></div>
+      </aside>
+
+      <section class="detail">
+        <div>
+          <div id="riskBadge" class="risk low">LOW RISK</div>
+          <h2 id="subjectText">Select an email from the left panel.</h2>
+          <div id="metaText" class="meta"></div>
+        </div>
+
+        <div id="bodyText" class="body">Email content will appear here.</div>
+
+        <div class="reason-box">
+          <h3>Threat Indicators</h3>
+          <ul id="reasonList" class="reasons"></ul>
+        </div>
+
+        <div>
+          <div class="actions">
+            <button id="markSafeBtn" class="btn secondary" type="button">Mark Safe</button>
+            <button id="markSpamBtn" class="btn" type="button">Move to Spam</button>
+          </div>
+          <p id="notice" class="notice">Ready.</p>
+        </div>
+      </section>
+    </section>
+
+    <section class="analytics">
+      <article class="analytics-card">
+        <h3>Risk Distribution and Trend</h3>
+        <div class="dist-row">
+          <span>High</span>
+          <div class="bar-track"><div id="highBar" class="bar-fill high"></div></div>
+          <span id="highBandCount">0</span>
+        </div>
+        <div class="dist-row">
+          <span>Medium</span>
+          <div class="bar-track"><div id="mediumBar" class="bar-fill medium"></div></div>
+          <span id="mediumBandCount">0</span>
+        </div>
+        <div class="dist-row">
+          <span>Low</span>
+          <div class="bar-track"><div id="lowBar" class="bar-fill low"></div></div>
+          <span id="lowBandCount">0</span>
+        </div>
+        <div class="small-muted">Risk trend graph (high / medium / safe)</div>
+        <div class="high-risk-chart-wrap">
+          <svg id="highRiskChart" class="high-risk-chart" viewBox="0 0 520 180" preserveAspectRatio="none" aria-label="High risk trend graph"></svg>
+          <div id="chartTooltip" class="chart-tooltip"></div>
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-dot high"></span>High</span>
+            <span class="legend-item"><span class="legend-dot medium"></span>Medium</span>
+            <span class="legend-item"><span class="legend-dot low"></span>Safe</span>
+          </div>
+          <div id="highRiskLabels" class="chart-label-row"></div>
+        </div>
+        <div class="small-muted">Datewise trend (total/high)</div>
+        <div id="trendList" class="trend"></div>
+      </article>
+
+      <article class="analytics-card">
+        <h3>Top Risky and Activity Timeline</h3>
+        <ul id="topRiskList" class="mini-list"></ul>
+        <div class="small-muted">Recent analyst actions</div>
+        <ul id="activityList" class="mini-list"></ul>
+        <div class="small-muted">AI command assistant</div>
+        <div id="assistantChat" class="chat-log"></div>
+        <form id="assistantForm" class="assistant-form">
+          <input id="assistantInput" class="assistant-input" type="text" placeholder="Ask: delete all emails" />
+          <button class="btn secondary" type="submit">Send</button>
+        </form>
+        <div class="chat-actions">
+          <button class="quick" type="button" data-command="risk summary">Risk Summary</button>
+          <button class="quick" type="button" data-command="count high risk emails">High Risk Count</button>
+          <button class="quick" type="button" data-command="delete all emails">Delete All Emails</button>
+          <button class="quick" type="button" data-command="reset demo emails">Reset Demo Emails</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const LOGIN_PAGE = "frontend.html";
+    const API_BASE = "http://127.0.0.1:5000";
+
+    const sessionRaw = localStorage.getItem("mailGuardSession");
+    if (!sessionRaw) {
+      window.location.href = LOGIN_PAGE;
+    }
+
+    let session = null;
+    try {
+      session = JSON.parse(sessionRaw);
+    } catch (error) {
+      localStorage.removeItem("mailGuardSession");
+      window.location.href = LOGIN_PAGE;
+    }
+
+    if (!session || !session.email || !session.token) {
+      localStorage.removeItem("mailGuardSession");
+      window.location.href = LOGIN_PAGE;
+    }
+
+    if (session.expiresAt && Number.isFinite(Date.parse(session.expiresAt))) {
+      const now = Date.now();
+      const expiry = new Date(session.expiresAt).getTime();
+      if (now >= expiry) {
+        localStorage.removeItem("mailGuardSession");
+        window.location.href = LOGIN_PAGE;
+      }
+    }
+
+    const userInfo = document.getElementById("userInfo");
+    const sourceChip = document.getElementById("sourceChip");
+    const totalCount = document.getElementById("totalCount");
+    const highCount = document.getElementById("highCount");
+    const domainCount = document.getElementById("domainCount");
+    const avgScore = document.getElementById("avgScore");
+
+    const searchInput = document.getElementById("searchInput");
+    const tabs = [...document.querySelectorAll(".tab")];
+    const mailList = document.getElementById("mailList");
+
+    const riskBadge = document.getElementById("riskBadge");
+    const subjectText = document.getElementById("subjectText");
+    const metaText = document.getElementById("metaText");
+    const bodyText = document.getElementById("bodyText");
+    const reasonList = document.getElementById("reasonList");
+    const notice = document.getElementById("notice");
+
+    const refreshBtn = document.getElementById("refreshBtn");
+    const exportBtn = document.getElementById("exportBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const markSafeBtn = document.getElementById("markSafeBtn");
+    const markSpamBtn = document.getElementById("markSpamBtn");
+
+    const highBar = document.getElementById("highBar");
+    const mediumBar = document.getElementById("mediumBar");
+    const lowBar = document.getElementById("lowBar");
+    const highBandCount = document.getElementById("highBandCount");
+    const mediumBandCount = document.getElementById("mediumBandCount");
+    const lowBandCount = document.getElementById("lowBandCount");
+    const highRiskChartWrap = document.querySelector(".high-risk-chart-wrap");
+    const trendList = document.getElementById("trendList");
+    const highRiskChart = document.getElementById("highRiskChart");
+    const chartTooltip = document.getElementById("chartTooltip");
+    const highRiskLabels = document.getElementById("highRiskLabels");
+    const topRiskList = document.getElementById("topRiskList");
+    const activityList = document.getElementById("activityList");
+    const assistantChat = document.getElementById("assistantChat");
+    const assistantForm = document.getElementById("assistantForm");
+    const assistantInput = document.getElementById("assistantInput");
+    const quickCommandButtons = [...document.querySelectorAll(".quick")];
+
+    userInfo.textContent = `Signed in as ${session.email}`;
+
+    let emails = [];
+    let metrics = null;
+    let activity = [];
+    let activeFilter = "all";
+    let selectedId = null;
+
+    function scoreBand(score) {
+      if (score >= 70) {
+        return { key: "high", label: "HIGH RISK" };
+      }
+      if (score >= 35) {
+        return { key: "medium", label: "MEDIUM RISK" };
+      }
+      return { key: "low", label: "LOW RISK" };
+    }
+
+    function isSuspiciousDomain(domain) {
+      return /\.(xyz|tk|cf|pw|ga)$/i.test(domain || "");
+    }
+
+    function setNotice(text) {
+      notice.textContent = text;
+    }
+
+    function handleUnauthorized() {
+      localStorage.removeItem("mailGuardSession");
+      window.location.href = LOGIN_PAGE;
+    }
+
+    async function apiFetch(path, options = {}) {
+      const headers = { ...(options.headers || {}), Authorization: `Bearer ${session.token}` };
+      const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+      if (response.status === 401) {
+        handleUnauthorized();
+        throw new Error("Unauthorized");
+      }
+      return response;
+    }
+
+    function computeLocalMetrics(items) {
+      const riskBands = { high: 0, medium: 0, low: 0 };
+      const categoryCounts = {};
+      const daily = {};
+
+      items.forEach((item) => {
+        const score = Number(item.score || 0);
+        const band = scoreBand(score).key;
+        riskBands[band] += 1;
+        categoryCounts[item.category || "uncategorized"] = (categoryCounts[item.category || "uncategorized"] || 0) + 1;
+
+        const date = item.date || "unknown";
+        if (!daily[date]) {
+          daily[date] = { total: 0, high: 0, medium: 0, low: 0 };
+        }
+        daily[date].total += 1;
+        daily[date][band] += 1;
+      });
+
+      return {
+        totalEmails: items.length,
+        averageScore: items.length ? Math.round(items.reduce((sum, item) => sum + Number(item.score || 0), 0) / items.length) : 0,
+        riskBands,
+        categoryCounts,
+        suspiciousDomainCount: items.filter((item) => isSuspiciousDomain(item.senderDomain)).length,
+        trendByDate: Object.keys(daily).sort().map((date) => ({ date, ...daily[date] })),
+        topRiskyEmails: [...items]
+          .sort((a, b) => Number(b.score || 0) - Number(a.score || 0))
+          .slice(0, 5)
+          .map((item) => ({ id: item.id, subject: item.subject, from: item.from, score: Number(item.score || 0) })),
+        activityCount: activity.length
+      };
+    }
+
+    function renderStats() {
+      const statsSource = metrics || computeLocalMetrics(emails);
+      totalCount.textContent = String(statsSource.totalEmails || 0);
+      highCount.textContent = String((statsSource.riskBands && statsSource.riskBands.high) || 0);
+      domainCount.textContent = String(statsSource.suspiciousDomainCount || 0);
+      avgScore.textContent = String(statsSource.averageScore || 0);
+    }
+
+    function renderAnalytics() {
+      const statsSource = metrics || computeLocalMetrics(emails);
+      const bands = statsSource.riskBands || { high: 0, medium: 0, low: 0 };
+      const total = Math.max(1, Number(statsSource.totalEmails || 0));
+
+      const highPct = Math.round((bands.high / total) * 100);
+      const mediumPct = Math.round((bands.medium / total) * 100);
+      const lowPct = Math.round((bands.low / total) * 100);
+
+      highBar.style.width = `${highPct}%`;
+      mediumBar.style.width = `${mediumPct}%`;
+      lowBar.style.width = `${lowPct}%`;
+
+      highBandCount.textContent = String(bands.high || 0);
+      mediumBandCount.textContent = String(bands.medium || 0);
+      lowBandCount.textContent = String(bands.low || 0);
+
+      const trend = statsSource.trendByDate || [];
+      renderHighRiskChart(trend);
+      trendList.innerHTML = "";
+      if (!trend.length) {
+        trendList.innerHTML = '<div class="empty">No trend data available.</div>';
+      } else {
+        trend.slice(-7).forEach((point) => {
+          const row = document.createElement("div");
+          row.className = "trend-item";
+          row.innerHTML = `<span>${point.date}</span><span>${point.total} / ${point.high}</span>`;
+          trendList.appendChild(row);
+        });
+      }
+
+      const topRisky = statsSource.topRiskyEmails || [];
+      topRiskList.innerHTML = "";
+      if (!topRisky.length) {
+        topRiskList.innerHTML = '<li>No risky records available.</li>';
+      } else {
+        topRisky.forEach((item) => {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${item.subject}</strong><br>${item.from} | score ${item.score}`;
+          topRiskList.appendChild(li);
+        });
+      }
+
+      activityList.innerHTML = "";
+      if (!activity.length) {
+        activityList.innerHTML = '<li>No activity recorded yet.</li>';
+      } else {
+        activity.slice(0, 8).forEach((entry) => {
+          const li = document.createElement("li");
+          const actor = entry.actor || "system";
+          const stamp = entry.timestamp ? new Date(entry.timestamp).toLocaleString() : "unknown";
+          li.innerHTML = `<strong>${entry.eventType || "event"}</strong><br>${actor}: ${entry.message || "-"}<br>${stamp}`;
+          activityList.appendChild(li);
+        });
+      }
+    }
+
+    function renderHighRiskChart(trendData) {
+      const svgNs = "http://www.w3.org/2000/svg";
+      const width = 520;
+      const height = 180;
+      const padX = 24;
+      const padY = 16;
+      const plotWidth = width - padX * 2;
+      const plotHeight = height - padY * 2;
+      const series = [...trendData].slice(-10);
+
+      highRiskChart.innerHTML = "";
+      highRiskLabels.innerHTML = "";
+      hideChartTooltip();
+
+      if (!series.length) {
+        const empty = document.createElementNS(svgNs, "text");
+        empty.setAttribute("x", "50%");
+        empty.setAttribute("y", "50%");
+        empty.setAttribute("fill", "#9dbad0");
+        empty.setAttribute("text-anchor", "middle");
+        empty.setAttribute("dominant-baseline", "middle");
+        empty.setAttribute("font-size", "12");
+        empty.textContent = "No risk trend data";
+        highRiskChart.appendChild(empty);
+        return;
+      }
+
+      const maxValue = Math.max(
+        1,
+        ...series.map((point) => Math.max(
+          Number(point.high || 0),
+          Number(point.medium || 0),
+          Number(point.low || 0)
+        ))
+      );
+      for (let i = 0; i <= 4; i += 1) {
+        const y = padY + (plotHeight * i) / 4;
+        const grid = document.createElementNS(svgNs, "line");
+        grid.setAttribute("x1", String(padX));
+        grid.setAttribute("y1", String(y));
+        grid.setAttribute("x2", String(width - padX));
+        grid.setAttribute("y2", String(y));
+        grid.setAttribute("class", "chart-grid");
+        highRiskChart.appendChild(grid);
+      }
+
+      function buildPoints(key) {
+        return series.map((point, index) => {
+          const value = Number(point[key] || 0);
+          const x = series.length === 1
+            ? width / 2
+            : padX + (index * plotWidth) / (series.length - 1);
+          const y = padY + ((maxValue - value) * plotHeight) / maxValue;
+          return {
+            x,
+            y,
+            date: String(point.date || ""),
+            value,
+            high: Number(point.high || 0),
+            medium: Number(point.medium || 0),
+            low: Number(point.low || 0),
+            total: Number(point.total || 0)
+          };
+        });
+      }
+
+      function drawLine(points, key) {
+        const path = document.createElementNS(svgNs, "path");
+        const d = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
+        path.setAttribute("d", d);
+        path.setAttribute("class", `chart-line ${key}`);
+        highRiskChart.appendChild(path);
+
+        points.forEach((point) => {
+          const circle = document.createElementNS(svgNs, "circle");
+          circle.setAttribute("cx", String(point.x));
+          circle.setAttribute("cy", String(point.y));
+          circle.setAttribute("r", "3.8");
+          circle.setAttribute("class", `chart-point ${key}`);
+          circle.addEventListener("mouseenter", (event) => showChartTooltip(event, point));
+          circle.addEventListener("mousemove", (event) => showChartTooltip(event, point));
+          circle.addEventListener("mouseleave", hideChartTooltip);
+          highRiskChart.appendChild(circle);
+        });
+      }
+
+      const highPoints = buildPoints("high");
+      const mediumPoints = buildPoints("medium");
+      const lowPoints = buildPoints("low");
+
+      drawLine(lowPoints, "low");
+      drawLine(mediumPoints, "medium");
+      drawLine(highPoints, "high");
+
+      series.forEach((point) => {
+        const dateText = String(point.date || "");
+        const shortDate = dateText.length >= 10 ? dateText.slice(5) : dateText;
+        const highValue = Number(point.high || 0);
+        const mediumValue = Number(point.medium || 0);
+        const lowValue = Number(point.low || 0);
+
+        const pill = document.createElement("span");
+        pill.className = "chart-pill";
+        pill.textContent = `${shortDate} H:${highValue} M:${mediumValue} S:${lowValue}`;
+        highRiskLabels.appendChild(pill);
+      });
+    }
+
+    function showChartTooltip(event, point) {
+      if (!chartTooltip || !highRiskChartWrap) {
+        return;
+      }
+      const wrapRect = highRiskChartWrap.getBoundingClientRect();
+      const left = event.clientX - wrapRect.left;
+      const top = event.clientY - wrapRect.top;
+      chartTooltip.textContent = `${point.date} | H:${point.high} M:${point.medium} S:${point.low}`;
+      chartTooltip.style.left = `${left}px`;
+      chartTooltip.style.top = `${top}px`;
+      chartTooltip.style.opacity = "1";
+    }
+
+    function hideChartTooltip() {
+      if (!chartTooltip) {
+        return;
+      }
+      chartTooltip.style.opacity = "0";
+    }
+
+    function getFilteredEmails() {
+      const search = searchInput.value.trim().toLowerCase();
+      return emails.filter((item) => {
+        const band = scoreBand(Number(item.score || 0)).key;
+        const byTab = activeFilter === "all" || activeFilter === band;
+        const bySearch = !search || item.subject.toLowerCase().includes(search) || item.from.toLowerCase().includes(search);
+        return byTab && bySearch;
+      });
+    }
+
+    function renderList() {
+      const filtered = getFilteredEmails();
+      if (!filtered.length) {
+        mailList.innerHTML = '<div class="empty">No emails match this filter.</div>';
+        return;
+      }
+
+      mailList.innerHTML = "";
+      filtered.forEach((item) => {
+        const row = document.createElement("button");
+        const risk = scoreBand(Number(item.score || 0));
+        row.type = "button";
+        row.className = `mail-item${item.id === selectedId ? " active" : ""}`;
+        row.innerHTML = `
+          <div class="top">
+            <h4>${item.subject}</h4>
+            <span class="risk ${risk.key}">${item.score}</span>
+          </div>
+          <p>${item.from}</p>
+          <p>${item.date}</p>
+        `;
+        row.addEventListener("click", () => {
+          selectedId = item.id;
+          renderList();
+          renderDetail();
+        });
+        mailList.appendChild(row);
+      });
+    }
+
+    function renderDetail() {
+      const item = emails.find((entry) => entry.id === selectedId);
+      if (!item) {
+        riskBadge.className = "risk low";
+        riskBadge.textContent = "LOW RISK";
+        subjectText.textContent = "Select an email from the left panel.";
+        metaText.textContent = "";
+        bodyText.textContent = "Email content will appear here.";
+        reasonList.innerHTML = "";
+        return;
+      }
+
+      const risk = scoreBand(Number(item.score || 0));
+      riskBadge.className = `risk ${risk.key}`;
+      riskBadge.textContent = `${risk.label} | SCORE ${item.score}`;
+      subjectText.textContent = item.subject;
+      metaText.textContent = `From: ${item.from} | Domain: ${item.senderDomain} | Date: ${item.date}`;
+      bodyText.textContent = item.body;
+
+      reasonList.innerHTML = "";
+      const reasons = Array.isArray(item.reasons) && item.reasons.length ? item.reasons : ["No indicators detected"];
+      reasons.forEach((reason) => {
+        const li = document.createElement("li");
+        li.textContent = reason;
+        reasonList.appendChild(li);
+      });
+    }
+
+    async function loadEmails() {
+      const response = await apiFetch("/api/emails");
+      if (!response.ok) {
+        throw new Error(`Unable to fetch emails (${response.status})`);
+      }
+      const data = await response.json();
+      emails = data.map((item) => ({
+        ...item,
+        score: Number(item.score || 0),
+        reasons: Array.isArray(item.reasons) ? item.reasons : []
+      }));
+
+      if (!emails.find((entry) => entry.id === selectedId)) {
+        selectedId = emails[0] ? emails[0].id : null;
+      }
+
+      renderList();
+      renderDetail();
+    }
+
+    async function loadMetrics() {
+      const response = await apiFetch("/api/metrics");
+      if (!response.ok) {
+        throw new Error(`Unable to fetch metrics (${response.status})`);
+      }
+      metrics = await response.json();
+      renderStats();
+      renderAnalytics();
+    }
+
+    async function loadActivity() {
+      const response = await apiFetch("/api/activity?limit=20");
+      if (!response.ok) {
+        throw new Error(`Unable to fetch activity (${response.status})`);
+      }
+      activity = await response.json();
+      renderAnalytics();
+    }
+
+    function addLocalActivity(eventType, message) {
+      activity.unshift({
+        timestamp: new Date().toISOString(),
+        eventType,
+        actor: session.email,
+        message
+      });
+      activity = activity.slice(0, 20);
+    }
+
+    function appendChatMessage(role, text) {
+      const messageNode = document.createElement("div");
+      messageNode.className = `chat-msg ${role}`;
+      messageNode.textContent = `${role === "user" ? "You" : "Assistant"}: ${text}`;
+      assistantChat.appendChild(messageNode);
+      assistantChat.scrollTop = assistantChat.scrollHeight;
+    }
+
+    async function runAssistantCommand(commandText) {
+      const prompt = commandText.trim();
+      if (!prompt) {
+        return;
+      }
+
+      appendChatMessage("user", prompt);
+      setNotice("Assistant is working...");
+
+      const response = await apiFetch("/api/assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: prompt })
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || `Assistant request failed (${response.status})`);
+      }
+
+      appendChatMessage("bot", data.reply || "Completed.");
+      if (data.metrics) {
+        metrics = data.metrics;
+      }
+
+      if (data.action === "delete_all" || data.action === "restore_demo") {
+        await Promise.all([loadEmails(), loadMetrics(), loadActivity()]);
+      } else {
+        await loadActivity();
+        renderStats();
+        renderAnalytics();
+      }
+
+      setNotice("Assistant response received.");
+    }
+
+    async function runAction(mode) {
+      const item = emails.find((entry) => entry.id === selectedId);
+      if (!item) {
+        setNotice("Select an email first.");
+        return;
+      }
+
+      const endpoint = mode === "safe" ? "mark_safe" : "mark_spam";
+      setNotice(`Submitting ${mode} action...`);
+
+      const response = await apiFetch(`/api/${endpoint}/${item.id}`, { method: "POST" });
+      if (!response.ok) {
+        throw new Error(`Action failed (${response.status})`);
+      }
+
+      addLocalActivity(mode === "safe" ? "mark_safe" : "mark_spam", `Updated ${item.id}`);
+      setNotice(`Email ${mode === "safe" ? "marked safe" : "moved to spam"}.`);
+      await Promise.all([loadEmails(), loadMetrics(), loadActivity()]);
+    }
+
+    async function runRefresh() {
+      setNotice("Refreshing secured data...");
+      try {
+        await Promise.all([loadEmails(), loadMetrics(), loadActivity()]);
+        sourceChip.textContent = "Secured API";
+        setNotice("Data synchronized from backend.");
+      } catch (error) {
+        sourceChip.textContent = "API Error";
+        setNotice(error.message || "Unable to refresh data.");
+      }
+    }
+
+    async function runLogout() {
+      try {
+        await apiFetch("/api/logout", { method: "POST" });
+      } catch (error) {
+        // Ignore API logout failure and clear local session anyway.
+      }
+      localStorage.removeItem("mailGuardSession");
+      window.location.href = LOGIN_PAGE;
+    }
+
+    function exportReport() {
+      const report = {
+        generatedAt: new Date().toISOString(),
+        generatedBy: session.email,
+        metrics: metrics || computeLocalMetrics(emails),
+        activity,
+        emails
+      };
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `mailguard-report-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setNotice("Incident report exported.");
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((btn) => btn.classList.remove("active"));
+        tab.classList.add("active");
+        activeFilter = tab.dataset.filter;
+        renderList();
+      });
+    });
+
+    searchInput.addEventListener("input", renderList);
+    refreshBtn.addEventListener("click", runRefresh);
+    exportBtn.addEventListener("click", exportReport);
+    markSafeBtn.addEventListener("click", async () => {
+      try {
+        await runAction("safe");
+      } catch (error) {
+        setNotice(error.message || "Safe action failed.");
+      }
+    });
+    markSpamBtn.addEventListener("click", async () => {
+      try {
+        await runAction("spam");
+      } catch (error) {
+        setNotice(error.message || "Spam action failed.");
+      }
+    });
+    logoutBtn.addEventListener("click", runLogout);
+    assistantForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const text = assistantInput.value.trim();
+      assistantInput.value = "";
+      if (!text) {
+        return;
+      }
+      try {
+        await runAssistantCommand(text);
+      } catch (error) {
+        appendChatMessage("bot", error.message || "Assistant could not complete the request.");
+        setNotice(error.message || "Assistant command failed.");
+      }
+    });
+    quickCommandButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const command = button.dataset.command || "";
+        if (!command) {
+          return;
+        }
+        if (command === "delete all emails") {
+          const proceed = window.confirm("Delete all emails now?");
+          if (!proceed) {
+            return;
+          }
+        }
+        try {
+          await runAssistantCommand(command);
+        } catch (error) {
+          appendChatMessage("bot", error.message || "Assistant could not complete the request.");
+          setNotice(error.message || "Assistant command failed.");
+        }
+      });
+    });
+
+    appendChatMessage("bot", "Hi, I can help. Try: delete all emails, reset demo emails, or risk summary.");
+    runRefresh();
+  </script>
+</body>
+</html>
